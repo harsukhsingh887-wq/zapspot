@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
+import { useToast } from '../context/ToastContext';
 import { mockUser } from '../data/mockStations';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Zap, Clock, Download, Leaf, Award, Car, Plus, Trash2, AlertTriangle, Battery, X } from 'lucide-react';
@@ -42,13 +43,17 @@ export default function Dashboard() {
   const [showAddVehicle, setShowAddVehicle] = useState(false);
   const [newVehicle, setNewVehicle] = useState({ name: '', type: '4-wheeler', batteryCapacity: 40, connector: 'CCS2' });
 
+  const { toast } = useToast();
+
   const handleSOS = () => {
-    const confirmed = window.confirm(
-      '🚨 Emergency SOS\n\nThis will contact roadside assistance and share your location.\n\nDo you want to proceed?'
+    // Replaced native alert with toast to prevent browser suppression
+    toast.error(
+      '🚨 EMERGENCY SOS DEPLOYED\n\n' +
+      'Roadside assistance dispatched to your location.\n' +
+      'Estimated Arrival: 15-20 Mins\n\n' + 
+      'Helpline: 1800-ZAP-HELP',
+      10000
     );
-    if (confirmed) {
-      alert('✅ SOS Alert Sent!\n\nRoadside assistance has been notified.\nExpected arrival: 15-20 minutes.\n\nEmergency Helpline: 1800-ZAP-HELP');
-    }
   };
 
   if (!isAuthenticated) {

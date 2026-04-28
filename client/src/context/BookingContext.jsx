@@ -5,6 +5,7 @@ const BookingContext = createContext(null);
 
 export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState(mockBookings);
+  const [enquiries, setEnquiries] = useState([]);
   const [showBooking, setShowBooking] = useState(false);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedCharger, setSelectedCharger] = useState(null);
@@ -27,6 +28,12 @@ export function BookingProvider({ children }) {
     ));
   };
 
+  const updateBooking = (bookingId, updates) => {
+    setBookings(prev => prev.map(b =>
+      b._id === bookingId ? { ...b, ...updates } : b
+    ));
+  };
+
   const startBooking = (station, charger) => {
     setSelectedStation(station);
     setSelectedCharger(charger);
@@ -39,10 +46,25 @@ export function BookingProvider({ children }) {
     setSelectedCharger(null);
   };
 
+  const addEnquiry = (enquiry) => {
+    setEnquiries(prev => [{
+      ...enquiry,
+      _id: 'enq-' + Date.now(),
+      timestamp: new Date().toISOString(),
+    }, ...prev]);
+  };
+
+  const updateEnquiry = (enquiryId, updates) => {
+    setEnquiries(prev => prev.map(e =>
+      e._id === enquiryId ? { ...e, ...updates } : e
+    ));
+  };
+
   return (
     <BookingContext.Provider value={{
-      bookings, showBooking, selectedStation, selectedCharger,
-      addBooking, cancelBooking, startBooking, closeBooking, setShowBooking
+      bookings, enquiries, showBooking, selectedStation, selectedCharger,
+      addBooking, cancelBooking, updateBooking, startBooking, closeBooking,
+      setShowBooking, addEnquiry, updateEnquiry
     }}>
       {children}
     </BookingContext.Provider>

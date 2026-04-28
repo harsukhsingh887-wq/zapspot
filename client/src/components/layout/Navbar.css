@@ -29,15 +29,11 @@
   flex-shrink: 0;
 }
 
-.brand-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--color-accent);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
+.brand-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .brand-text {

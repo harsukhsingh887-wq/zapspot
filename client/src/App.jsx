@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { BookingProvider } from './context/BookingContext';
+import { ToastProvider } from './context/ToastContext';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import MapFinder from './pages/MapFinder';
@@ -14,6 +15,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
+    <ToastProvider>
       <BookingProvider>
         <Router>
           <div className="app">
@@ -32,6 +34,7 @@ function App() {
           </div>
         </Router>
       </BookingProvider>
+    </ToastProvider>
     </AuthProvider>
   );
 }

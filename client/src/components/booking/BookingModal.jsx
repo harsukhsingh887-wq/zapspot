@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { X, Calendar, CreditCard, Smartphone, Wallet, CheckCircle, Zap, Download } from 'lucide-react';
+import { X, Calendar, CreditCard, Smartphone, Wallet, CheckCircle, Zap, Download, Loader2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { useBooking } from '../../context/BookingContext';
 import { useAuth } from '../../context/AuthContext';
@@ -86,6 +86,7 @@ export default function BookingModal() {
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [booking, setBooking] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const timeSlots = useMemo(() => {
     if (!selectedStation) return [];
@@ -95,40 +96,47 @@ export default function BookingModal() {
   if (!showBooking || !selectedStation) return null;
 
   const kwhEstimate = ((selectedCharger?.power || 22) * 0.5 * 0.9).toFixed(1);
-  const baseCost = Math.round(kwhEstimate * selectedStation.pricePerKwh);
-  const discount = paymentMethod === 'upi' ? 10 : 0;
-  const gst = Math.round((baseCost - discount) * 0.18);
-  const total = baseCost - discount + gst;
+  const baseCost = Math.max(1, Math.round(kwhEstimate * selectedStation.pricePerKwh));
+  const discount = Math.min(paymentMethod === 'upi' ? 10 : 0, baseCost);
+  const gst = Math.max(0, Math.round((baseCost - discount) * 0.18));
+  const total = Math.max(0, baseCost - discount + gst);
 
   const handleConfirm = () => {
-    const newBooking = addBooking({
-      stationName: selectedStation.name,
-      stationId: selectedStation._id,
-      chargerId: selectedCharger?.id,
-      chargerType: selectedCharger?.type,
-      date: selectedDate,
-      timeSlot: selectedSlot?.label,
-      cost: total,
-      totalKwh: parseFloat(kwhEstimate),
-      vehicle: user?.vehicles?.[0]?.name || 'My EV',
-      discount,
-    });
-    setBooking(newBooking);
-    setStep(4);
-    // Generate QR code
-    const qrData = JSON.stringify({
-      bookingId: newBooking._id,
-      station: selectedStation.name,
-      charger: selectedCharger?.type,
-      date: selectedDate,
-      time: selectedSlot?.label,
-      cost: total,
-    });
-    QRCode.toDataURL(qrData, {
-      width: 200,
-      margin: 2,
-      color: { dark: '#1D1D1F', light: '#FFFFFF' }
-    }).then(url => setQrDataUrl(url)).catch(() => setQrDataUrl(''));
+    setIsProcessing(true);
+    
+    // Simulating API/Payment gateway delay to make it feel real
+    setTimeout(() => {
+      const newBooking = addBooking({
+        stationName: selectedStation.name,
+        stationId: selectedStation._id,
+        chargerId: selectedCharger?.id,
+        chargerType: selectedCharger?.type,
+        date: selectedDate,
+        timeSlot: selectedSlot?.label,
+        cost: total,
+        totalKwh: parseFloat(kwhEstimate),
+        vehicle: user?.vehicles?.[0]?.name || 'My EV',
+        discount,
+      });
+      setBooking(newBooking);
+      setIsProcessing(false);
+      setStep(4);
+      
+      // Generate QR code
+      const qrData = JSON.stringify({
+        bookingId: newBooking._id,
+        station: selectedStation.name,
+        charger: selectedCharger?.type,
+        date: selectedDate,
+        time: selectedSlot?.label,
+        cost: total,
+      });
+      QRCode.toDataURL(qrData, {
+        width: 200,
+        margin: 2,
+        color: { dark: '#1D1D1F', light: '#FFFFFF' }
+      }).then(url => setQrDataUrl(url)).catch(() => setQrDataUrl(''));
+    }, 1500);
   };
 
   const handleClose = () => {
@@ -284,9 +292,16 @@ export default function BookingModal() {
             </div>
 
             <div className="step-actions">
-              <button className="btn btn-secondary" onClick={() => setStep(2)}>Back</button>
-              <button className="btn btn-success btn-lg" onClick={handleConfirm}>
-                Pay {formatCurrency(total)}
+              <button className="btn btn-secondary" disabled={isProcessing} onClick={() => setStep(2)}>Back</button>
+              <button className="btn btn-success btn-lg" disabled={isProcessing} onClick={handleConfirm} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="spinner" size={20} />
+                    Processing...
+                  </>
+                ) : (
+                  `Pay ${formatCurrency(total)}`
+                )}
               </button>
             </div>
           </div>

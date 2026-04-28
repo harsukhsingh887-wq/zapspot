@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { LayoutDashboard, Building2, CalendarDays, BarChart3, AlertTriangle, DollarSign, Users, Zap, TrendingUp, Power, PowerOff, Camera, Download } from 'lucide-react';
+import { LayoutDashboard, Building2, CalendarDays, BarChart3, AlertTriangle, DollarSign, Users, Zap, TrendingUp, Power, PowerOff, Camera, Download, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
 import { mockStations, mockOwnerData } from '../data/mockStations';
+import { useBooking } from '../context/BookingContext';
+import { useToast } from '../context/ToastContext';
 import { formatCurrency } from '../utils/helpers';
 import './OwnerPortal.css';
 
@@ -10,6 +12,8 @@ const COLORS = ['#0071E3', '#30D158', '#FF9F0A', '#FF453A', '#A78BFA', '#06B6D4'
 export default function OwnerPortal() {
   const [activeNav, setActiveNav] = useState('dashboard');
   const [ownerStations, setOwnerStations] = useState(mockStations.filter(s => s.owner === 'owner1'));
+  const { enquiries, updateEnquiry } = useBooking();
+  const { toast } = useToast();
   const data = mockOwnerData;
 
   const handleToggleCharger = (stationId, chargerId) => {
@@ -53,6 +57,7 @@ export default function OwnerPortal() {
     { id: 'stations', icon: Building2, label: 'My Stations' },
     { id: 'bookings', icon: CalendarDays, label: 'Bookings' },
     { id: 'analytics', icon: BarChart3, label: 'Analytics' },
+    { id: 'enquiries', icon: MessageSquare, label: 'Enquiries' },
     { id: 'faults', icon: AlertTriangle, label: 'Fault Reports' },
   ];
 
@@ -322,6 +327,61 @@ export default function OwnerPortal() {
                 </ResponsiveContainer>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Enquiries View */}
+        {activeNav === 'enquiries' && (
+          <div className="owner-view">
+            <h2>User Enquiries</h2>
+            <p className="text-secondary" style={{ marginBottom: '24px' }}>Review user complaints for missed sessions and compensate accordingly</p>
+
+            {enquiries.length === 0 ? (
+              <div className="glass-card-static" style={{ padding: '40px', textAlign: 'center', borderRadius: '20px' }}>
+                <MessageSquare size={40} color="#6E6E73" style={{ marginBottom: '12px' }} />
+                <p className="text-secondary">No enquiries yet. Users can submit enquiries when they miss their charging sessions.</p>
+              </div>
+            ) : (
+              enquiries.map(enq => (
+                <div key={enq._id} className="glass-card-static" style={{ padding: '20px', borderRadius: '20px', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                    <div>
+                      <h4 style={{ fontSize: '14px', marginBottom: '4px' }}>{enq.stationName}</h4>
+                      <p className="text-secondary" style={{ fontSize: '12px' }}>Booking: {enq.bookingId} • {enq.date}</p>
+                    </div>
+                    <span className={`badge badge-${enq.status === 'pending' ? 'warning' : enq.status === 'approved' ? 'success' : 'danger'}`}>
+                      {enq.status === 'pending' ? 'Pending' : enq.status === 'approved' ? 'Compensated' : 'Rejected'}
+                    </span>
+                  </div>
+                  <div style={{ padding: '12px', background: 'rgba(0,0,0,0.03)', borderRadius: '12px', marginBottom: '12px' }}>
+                    <p style={{ fontSize: '13px', color: '#374151' }}>"{enq.message}"</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '13px', fontWeight: '600' }}>Amount: {formatCurrency(enq.cost)}</span>
+                    {enq.status === 'pending' ? (
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button className="btn btn-sm btn-success" onClick={() => {
+                          updateEnquiry(enq._id, { status: 'approved' });
+                          toast.success(`Compensation approved! ₹${enq.cost} refund will be processed to the user.`);
+                        }}>
+                          <CheckCircle size={14} /> Approve Refund
+                        </button>
+                        <button className="btn btn-sm btn-secondary" onClick={() => {
+                          updateEnquiry(enq._id, { status: 'rejected' });
+                          toast.error('Enquiry rejected. No refund will be issued.');
+                        }}>
+                          <XCircle size={14} /> Reject
+                        </button>
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: '12px', fontStyle: 'italic', color: enq.status === 'approved' ? '#059669' : '#DC2626' }}>
+                        {enq.status === 'approved' ? '✅ Refund processed' : '❌ Refund denied'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 

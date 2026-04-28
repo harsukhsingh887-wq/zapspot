@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { mockUser } from '../data/mockStations';
+import { api } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -21,23 +22,15 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-        setIsAuthenticated(true);
-        localStorage.setItem('zapspot_user', JSON.stringify(data.user));
-        localStorage.setItem('zapspot_token', data.token);
-        setShowLogin(false);
-        return { success: true };
-      }
-      return { success: false, error: 'Invalid credentials' };
-    } catch {
-      // Fallback to mock
+      const data = await api.login({ email, password });
+      setUser(data.user);
+      setIsAuthenticated(true);
+      localStorage.setItem('zapspot_user', JSON.stringify(data.user));
+      localStorage.setItem('zapspot_token', data.token);
+      setShowLogin(false);
+      return { success: true };
+    } catch (err) {
+      // Fallback to mock if backend is down or CORS blocks
       setUser(mockUser);
       setIsAuthenticated(true);
       localStorage.setItem('zapspot_user', JSON.stringify(mockUser));
@@ -51,22 +44,14 @@ export function AuthProvider({ children }) {
   const signup = async (name, email, password) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-        setIsAuthenticated(true);
-        localStorage.setItem('zapspot_user', JSON.stringify(data.user));
-        localStorage.setItem('zapspot_token', data.token);
-        setShowSignup(false);
-        return { success: true };
-      }
-      return { success: false, error: 'Registration failed' };
-    } catch {
+      const data = await api.register({ name, email, password });
+      setUser(data.user);
+      setIsAuthenticated(true);
+      localStorage.setItem('zapspot_user', JSON.stringify(data.user));
+      localStorage.setItem('zapspot_token', data.token);
+      setShowSignup(false);
+      return { success: true };
+    } catch (err) {
       const newUser = { ...mockUser, name, email };
       setUser(newUser);
       setIsAuthenticated(true);

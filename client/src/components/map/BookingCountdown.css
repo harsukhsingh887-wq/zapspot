@@ -1,0 +1,495 @@
+/* --- Booking Countdown Widget --- */
+.booking-countdown {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1001;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  animation: slideInCountdown 0.4s ease forwards;
+}
+
+@keyframes slideInCountdown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.countdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(0, 113, 227, 0.08);
+  color: #0071E3;
+  border-radius: 980px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.countdown-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6E6E73;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.countdown-close:hover {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.countdown-station {
+  margin-bottom: 12px;
+}
+
+.countdown-station-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1D1D1F;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.countdown-slot {
+  font-size: 11px;
+  color: #6E6E73;
+  font-weight: 500;
+}
+
+.countdown-phase-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #0071E3;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.countdown-badge.active-badge {
+  background: rgba(48, 209, 88, 0.1);
+  color: #1B9E3E;
+}
+
+.countdown-badge.expired-badge {
+  background: rgba(255, 69, 58, 0.08);
+  color: #FF453A;
+}
+
+/* Timer Display */
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 0;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 14px;
+}
+
+.countdown-timer.timer-active {
+  background: rgba(48, 209, 88, 0.06);
+}
+
+.countdown-timer.timer-expired {
+  background: rgba(255, 69, 58, 0.05);
+}
+
+.timer-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+}
+
+.timer-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1D1D1F;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.timer-label {
+  font-size: 9px;
+  color: #6E6E73;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+.timer-colon {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1D1D1F;
+  line-height: 1;
+  margin-bottom: 12px;
+  animation: blink-colon 1s infinite;
+}
+
+@keyframes blink-colon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.countdown-expired {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FF453A;
+  letter-spacing: -0.01em;
+}
+
+.countdown-cost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  margin-bottom: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 12px;
+  color: #6E6E73;
+}
+
+.countdown-cost strong {
+  color: #1D1D1F;
+  font-size: 14px;
+}
+
+/* Get Directions Button */
+.countdown-directions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(0, 113, 227, 0.08), rgba(0, 113, 227, 0.14));
+  color: #0071E3;
+  border: 1px solid rgba(0, 113, 227, 0.18);
+  transition: all 0.2s;
+}
+
+.countdown-directions-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 113, 227, 0.14), rgba(0, 113, 227, 0.22));
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.15);
+}
+
+/* Action Buttons */
+.countdown-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.countdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.03);
+  color: #1D1D1F;
+  width: 100%;
+  text-align: left;
+}
+
+.countdown-btn:hover:not(.disabled-btn) {
+  transform: translateX(2px);
+}
+
+.countdown-btn .btn-deduction {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* Cancel - Red */
+.cancel-btn {
+  background: rgba(255, 69, 58, 0.06);
+  color: #FF453A;
+  border-color: rgba(255, 69, 58, 0.15);
+}
+
+.cancel-btn:hover:not(.disabled-btn) {
+  background: rgba(255, 69, 58, 0.12);
+}
+
+.cancel-btn .btn-deduction {
+  color: #FF453A;
+}
+
+/* Change Slot - Blue */
+.change-btn {
+  background: rgba(0, 113, 227, 0.06);
+  color: #0071E3;
+  border-color: rgba(0, 113, 227, 0.15);
+}
+
+.change-btn:hover:not(.disabled-btn) {
+  background: rgba(0, 113, 227, 0.12);
+}
+
+/* No Report - Orange/Red */
+.noreport-btn {
+  background: rgba(255, 159, 10, 0.06);
+  color: #C67A00;
+  border-color: rgba(255, 159, 10, 0.15);
+}
+
+.noreport-btn:hover:not(.disabled-btn) {
+  background: rgba(255, 159, 10, 0.12);
+}
+
+.noreport-btn .btn-deduction {
+  color: #FF453A;
+}
+
+/* Enquiry - Purple/accent */
+.enquiry-btn {
+  background: rgba(167, 139, 250, 0.08);
+  color: #7C3AED;
+  border-color: rgba(167, 139, 250, 0.18);
+}
+
+.enquiry-btn:hover {
+  background: rgba(167, 139, 250, 0.15);
+}
+
+/* Report Charger - Teal/Green (positive outcome: refund) */
+.report-charger-btn {
+  background: rgba(6, 182, 212, 0.06);
+  color: #0891B2;
+  border-color: rgba(6, 182, 212, 0.18);
+}
+
+.report-charger-btn:hover:not(.disabled-btn) {
+  background: rgba(6, 182, 212, 0.12);
+}
+
+.report-charger-btn .btn-deduction {
+  color: #059669;
+}
+
+.report-refund-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(48, 209, 88, 0.08);
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.report-refund-badge strong {
+  display: block;
+  font-size: 13px;
+  color: #059669;
+  margin-bottom: 2px;
+}
+
+.report-refund-badge span {
+  font-size: 11px;
+  color: #6E6E73;
+}
+
+.report-refund-badge > svg {
+  color: #30D158;
+  flex-shrink: 0;
+}
+
+.report-submit-btn {
+  background: #0891B2 !important;
+  border-color: #0891B2 !important;
+}
+
+/* Disabled state */
+.disabled-btn {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.disabled-btn:hover {
+  transform: none !important;
+}
+
+/* --- Change Slot Modal --- */
+.countdown-modal {
+  max-width: 520px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.countdown-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+}
+
+.countdown-modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.change-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 24px 24px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.change-slot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: white;
+  color: #1D1D1F;
+}
+
+.change-slot-item.available:hover {
+  background: rgba(0, 113, 227, 0.06);
+  border-color: rgba(0, 113, 227, 0.2);
+  transform: scale(1.02);
+}
+
+.change-slot-item.booked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.slot-badge {
+  font-size: 10px;
+  color: #6E6E73;
+}
+
+/* --- Enquiry Modal --- */
+.enquiry-body {
+  padding: 0 24px 24px;
+}
+
+.enquiry-booking-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  font-size: 12px;
+  color: #6E6E73;
+  margin-bottom: 14px;
+}
+
+.enquiry-booking-info strong {
+  color: #1D1D1F;
+}
+
+.enquiry-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.enquiry-submit {
+  width: 100%;
+}
+
+/* Cancel Confirmation */
+.cancel-confirm-info {
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 14px;
+}
+
+.cancel-deduction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.cancel-deduction-row + .cancel-deduction-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cancel-amount-red {
+  color: #FF453A;
+  font-size: 15px;
+}
+
+.cancel-amount-green {
+  color: #30D158;
+  font-size: 15px;
+}
+
+.cancel-info-text {
+  font-size: 12px;
+  color: #6E6E73;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .booking-countdown {
+    width: calc(100% - 32px);
+    right: 16px;
+  }
+
+  .change-slot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

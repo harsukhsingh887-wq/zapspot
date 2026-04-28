@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, User, Menu, X, Zap, ChevronDown } from 'lucide-react';
+import { Search, MapPin, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/offilogo.png';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -17,9 +18,7 @@ export default function Navbar() {
     <nav className="navbar" id="main-navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <div className="brand-icon">
-            <Zap size={20} strokeWidth={2.5} />
-          </div>
+          <img src={logo} alt="Zapspot logo" className="brand-logo" />
           <span className="brand-text">Zapspot</span>
         </Link>
 

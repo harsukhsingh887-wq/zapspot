@@ -1,0 +1,297 @@
+/* ============================================================
+   Driving Mode HUD — Light Mode / Google Maps + Apple Style
+   ============================================================ */
+
+.dm-root {
+  position: absolute;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none; /* Let map clicks pass through the empty space */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: dmEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes dmEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Top Panel (Green Instruction Cards) ─────────────────── */
+.dm-top-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.dm-instruction-card {
+  background: #0B5C35; /* Google Maps nav green */
+  color: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.dm-maneuver-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.dm-maneuver-arrow {
+  font-size: 54px;
+  line-height: 1;
+  font-weight: 700;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.dm-turn-distance {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dm-instruction-content {
+  flex: 1;
+}
+
+.dm-instruction-text {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.dm-street-name {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.dm-next-row {
+  background: #094729; /* Darker green */
+  color: white;
+  border-radius: 12px;
+  padding: 12px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  align-self: flex-start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 4px;
+}
+
+.dm-then-label {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.dm-next-arrow {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dm-next-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ── Bottom Panel (White Stats Sheet) ────────────────────── */
+.dm-bottom-panel {
+  pointer-events: auto;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.1);
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Optional Speed Bubble attached to top of bottom panel */
+.dm-speed-bubble {
+  position: absolute;
+  top: -70px;
+  left: 16px;
+  background: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 2px solid #E5E5EA;
+}
+
+.dm-speed-val {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  color: #1D1D1F;
+}
+
+.dm-speed-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: #86868B;
+  text-transform: uppercase;
+}
+
+/* Alert Banners Row */
+.dm-banners-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none; /* Firefox */
+}
+.dm-banners-container::-webkit-scrollbar { display: none; }
+
+.dm-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 980px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dm-banner-traffic { background: #FFF3CD; color: #856404; }
+.dm-banner-toll { background: #E2E3E5; color: #383D41; }
+.dm-banner-warn { background: #FFF3CD; color: #856404; }
+.dm-banner-critical { background: #F8D7DA; color: #721C24; }
+.dm-banner-gps { background: #E2E3E5; color: #6C757D; }
+
+/* Bottom Content (Time, Dist, Close Btn) */
+.dm-bottom-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dm-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #E5E5EA;
+  background: white;
+  color: #1D1D1F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.dm-icon-btn:hover {
+  background: #F5F5F7;
+}
+
+.dm-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.dm-close-btn {
+  /* Google maps style close button */
+}
+
+.dm-route-btn {
+  color: #0071E3; /* Apple Blue */
+}
+
+.dm-main-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dm-time-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: #188038; /* Google maps green text for ETA */
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.dm-sub-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6E6E73;
+  margin-top: 4px;
+}
+
+.dm-dot-sep {
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.dm-batt-warn {
+  color: #FF9F0A;
+  font-weight: 600;
+}
+
+.dm-batt-ok {
+  color: #1D1D1F;
+}
+
+/* ── Mobile adjustments ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .dm-top-panel {
+    padding: 12px;
+  }
+  .dm-instruction-card {
+    padding: 16px;
+    gap: 16px;
+  }
+  .dm-maneuver-arrow {
+    font-size: 44px;
+  }
+  .dm-instruction-text {
+    font-size: 22px;
+  }
+  .dm-street-name {
+    font-size: 14px;
+  }
+  .dm-next-row {
+    padding: 8px 16px;
+  }
+  .dm-bottom-panel {
+    padding: 16px 20px 20px;
+  }
+  .dm-time-val {
+    font-size: 24px;
+  }
+  .dm-sub-stats {
+    font-size: 14px;
+  }
+}

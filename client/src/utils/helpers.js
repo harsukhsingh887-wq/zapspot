@@ -22,16 +22,16 @@ export function getStatusLabel(station) {
 }
 
 export function estimateChargingTime(batteryPercent, targetPercent, batteryCapacity, chargerPower) {
-  const kwhNeeded = batteryCapacity * (targetPercent - batteryPercent) / 100;
+  const kwhNeeded = Math.max(0, batteryCapacity * (targetPercent - batteryPercent) / 100);
   const efficiency = 0.9;
   const hours = kwhNeeded / (chargerPower * efficiency);
-  const minutes = Math.round(hours * 60);
+  const minutes = Math.max(0, Math.round(hours * 60));
   return minutes;
 }
 
 export function estimateCost(batteryPercent, targetPercent, batteryCapacity, pricePerKwh) {
-  const kwhNeeded = batteryCapacity * (targetPercent - batteryPercent) / 100;
-  return Math.round(kwhNeeded * pricePerKwh);
+  const kwhNeeded = Math.max(0, batteryCapacity * (targetPercent - batteryPercent) / 100);
+  return Math.max(0, Math.round(kwhNeeded * pricePerKwh));
 }
 
 export function formatCurrency(amount) {
